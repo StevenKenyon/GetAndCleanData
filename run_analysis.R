@@ -18,7 +18,7 @@
 ## This first section will download and unzip data file to your working directory.
 ##   Be sure to set your R working directory where you want these files to go
 ##   before running this script.  The next line is where my directory was set.
-setwd("E:/Coursera/3.DataGet&Clean/project/")
+setwd("C:/Users/Steve/Documents/Coursera/3.DataGet&Clean/project/")
    ## Download and unzip the data
 dataUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(url=dataUrl, destfile="./Uci.zip", method="auto")
@@ -127,18 +127,42 @@ write.csv(cbind(activityNames, subjectId, stdDevCols),file="./ActivityStandardDe
 
 ################################################################################
 ## Create a second, independent tidy data set with the average of each variable 
-##    for each activity and each subject in a second Directory
-mean(x_DataSet[1:10,])
-y_DataLables[1:10,]
-subjectId[1:10,]
-body_Acc_X[1:10,]
-body_Acc_Y[1:10,]
-body_Acc_Z[1:10,]
-body_Gyro_X[1:10,]
-body_Gyro_Y[1:10,]
-body_Gyro_Z[1:10,]
-total_Acc_X[1:10,]
-total_Acc_Y[1:10,]
-total_Acc_Z[1:10,]
+##    for each activity and each subject
 
-   ## Save Data set to .csv file in another directory.
+allVariableNames <- features[,2]
+names(x_DataSet) <- allVariableNames## proper headers for all variables
+theVariables <- cbind(activityNames, subjectId, x_DataSet)
+byActivity <- split(theVariables, activityNames, drop=FALSE)
+activityNumbers <- 1:6
+subjectIds <- 1:30
+outputMatrix <- matrix(data= NA, ncol=4, byrow=TRUE) # create the output matrix
+firstRun <- TRUE # to build the first line of the matrix differently
+for(actNum in activityNumbers){# For each Activity
+   theActivity <- mapActivityNum2Name(actNum)
+   ## Status Info
+   print(paste("now calculating means for activity: ",theActivity, sep=""))
+   for(subject in subjectIds){ # For each Subject
+      ## status dots every third subject
+      if(subject %% 3 == 0) print(".")
+      ## get the fields for a specific subject
+      specificSubjectFields <- which(byActivity[[actNum]][[2]] == subject) 
+      for(varName in allVariableNames) { # For each Variable
+         ## get the Mean
+         theMean <- mean(byActivity[[actNum]][[varName]][specificSubjectFields] )
+         ## add the fields to the output matrix
+         if(firstRun == FALSE){
+            outputMatrix <- rbind(outputMatrix,c(theActivity,subject,varName,theMean))
+         }
+         else{
+            outputMatrix <- rbind(c(theActivity,subject,varName,theMean))
+            firstRun <- FALSE            
+         }         
+      }
+   }
+}
+## label the columns
+colnames(outputMatrix) <- c("Activity","Subject","Variable","Mean")
+str(outputMatrix)
+summary(outputMatrix)
+   ## Save the second Data set to a file
+write.csv(outputMatrix,file="./ActivitySubjectVariableAverage.txt")
