@@ -6,7 +6,7 @@ It describes the variables, the data, and any transformations or work that I per
 3.	testDir = directory to hold the test data
 4.	sigDir_Te = directory to hold the Inertial signals data
 5.	All the objects in this section hold data from the input Test data set.  The original files were named the same as the variables below except I shortened the word test to just Te.
-#
+
 a.	x_DataSet_Te 
 b.	y_DataLables_Te
 c.	subjectId_Te
