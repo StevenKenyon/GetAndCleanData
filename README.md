@@ -2,6 +2,7 @@
 I’ve put everything in a single script.
 If you choose to run the script you will probably want to set your working directory to a place where this data can go, as all the data will be downloaded and manipulated from your current working directory.
 The steps taken in this transformation script are:
+#
 1.	Download and unzip the dataset
 2.	Merge the training and test data to a single data set
 3.	Extracts only the measurements on the mean and standard deviation for each measurement.
