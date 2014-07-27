@@ -162,7 +162,6 @@ for(actNum in activityNumbers){# For each Activity
 }
 ## label the columns
 colnames(outputMatrix) <- c("Activity","Subject","Variable","Mean")
-str(outputMatrix)
-summary(outputMatrix)
+
    ## Save the second Data set to a file
 write.csv(outputMatrix,file="./ActivitySubjectVariableAverage.txt")
